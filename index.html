@@ -74,7 +74,7 @@ const BSC=[4, 2, 3, 2, 5, 4, 3, 3, 0, 0, 2, 4, 5, 4, 0, 0, 2, 5, 6, 2, 5, 6, 6, 
 
 const $=id=>document.getElementById(id);
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-let MODE=store.get('katakana15.mode',4);if(![3,4,5,6].includes(MODE))MODE=4;let N=MODE==6?4:MODE,XM=MODE==6;
+let MODE=store.get('katakana15.mode',6);if(![3,4,5,6].includes(MODE))MODE=6;let N=MODE==6?4:MODE,XM=MODE==6;
 let grid=[],sol=null,init=null,base=new Set(),moves=0,secs=0,tm=null,cleared=false,viewed=false,drag=false,S=80;
 let found=new Set();
 const GAP=34,dyn=()=>N==5||XM,bk=()=>XM?6:N;
@@ -264,7 +264,7 @@ $('bf').onclick=()=>{
 };
 $('bm').onclick=()=>{
  const th=document.documentElement.getAttribute('data-theme');
- open('メニュー','<div class="sub">モード</div><div class="tabs">'+[3,4,6,5].map(k=>'<button data-m="'+k+'"'+(k==MODE?' class="on"':'')+'>'+(k==6?'4×4✕3':k+'×'+k)+'</button>').join('')+'</div>'
+ open('メニュー','<div class="sub">モード</div><div class="tabs">'+[3,4,6,5].map(k=>'<button data-m="'+k+'"'+(k==MODE?' class="on"':'')+'>'+(k==6?'4×4(✕)':k+'×'+k)+'</button>').join('')+'</div>'
   +'<div class="sub">設定（表示）</div><div class="tabs"><button data-t="light"'+(th=='light'?' class="on"':'')+'>ライト</button><button data-t="dark"'+(th=='dark'?' class="on"':'')+'>ダーク</button></div>');
  document.querySelectorAll('#bd [data-m]').forEach(b=>b.onclick=()=>{const k=+b.dataset.m;close();if(k!==MODE){MODE=k;N=k==6?4:k;XM=k==6;store.set('katakana15.mode',MODE);grid=[];newGame();}});
  document.querySelectorAll('#bd [data-t]').forEach(b=>b.onclick=()=>{setTheme(b.dataset.t);document.querySelectorAll('#bd [data-t]').forEach(x=>x.classList.toggle('on',x===b));});
