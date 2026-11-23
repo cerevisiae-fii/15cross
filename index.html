@@ -131,7 +131,7 @@ function judge(){
   m.innerHTML=runs.map(x=>'<i'+(x.ok?' class="ok"':'')+'></i>').join('');});
  const hit=new Set();
  if(dyn())a.all.forEach(x=>{if(x.ok)x.idx.forEach(i=>hit.add(i));});
- else grid.forEach((p,i)=>{if(p.ch!==null&&(a.rows[Math.floor(i/N)][0].ok||a.cols[i%N][0].ok))hit.add(i);});
+ else grid.forEach((p,i)=>{if(p.ch!==null&&i!==N*N-1&&(a.rows[Math.floor(i/N)][0].ok||a.cols[i%N][0].ok))hit.add(i);});
  const hy=new Set(),hg=new Set();
  if(hint)a.all.forEach(x=>{if(!x.ok||!solWords.has(x.t))return;const g=solKeys.has(x.idx.join()+':'+x.t);x.idx.forEach(i=>(g?hg:hy).add(i));});
  grid.forEach((p,i)=>{const c=p.el.classList;c.toggle('hit',hit.has(i));c.toggle('hy',hy.has(i)&&!hg.has(i));c.toggle('hg',hg.has(i));});
@@ -242,7 +242,7 @@ function solRuns(){
 function hintBoxes(){
  $('board').querySelectorAll('.hx').forEach(e=>e.remove());
  if(!hint||!sol)return;
- sol.chars.forEach((c,i)=>{if(c!=='X')return;const e=document.createElement('div');e.className='hx';e.style.left=((i%N)*S+1)+'px';e.style.top=(Math.floor(i/N)*S+1)+'px';$('board').appendChild(e);});
+ sol.chars.forEach((c,i)=>{if(c!=='X'&&!(c===null&&dyn()))return;const e=document.createElement('div');e.className='hx';e.style.left=((i%N)*S+1)+'px';e.style.top=(Math.floor(i/N)*S+1)+'px';$('board').appendChild(e);});
 }
 function setHint(v){
  hint=v;$('ba').textContent=v?'解答':'ヒント';
@@ -251,7 +251,7 @@ function setHint(v){
 }
 $('ba').onclick=()=>{
  if(!hint){
-  open('ヒントを見ますか？','<div>'+(dyn()?'✕マスの正しい位置が黄色い縁で示され、':'')+'正しい単語が完成すると黄色（正しい位置なら緑）で表示されます。発見語の正しい単語にも色が付きます。</div><button id="yes">ヒントを見る</button>');
+  open('ヒントを見ますか？','<div>'+(dyn()?'✕マスと〇マスの正しい位置が黄色い縁で示され、':'')+'正しい単語が完成すると黄色（正しい位置なら緑）で表示されます。発見語の正しい単語にも色が付きます。</div><button id="yes">ヒントを見る</button>');
   $('yes').onclick=()=>{setHint(true);close();};return;}
  if(viewed){showAns();return;}
  open('解答を見ますか？','<div>見ると、この問題には「解答閲覧済」と表示されます。</div><button id="yes">解答を見る</button>');
@@ -262,7 +262,8 @@ function nextIdx(){
  let seen=store.get(key,[]).filter(i=>i<B.length);
  let rest=B.map((_,i)=>i).filter(i=>!seen.includes(i));
  if(!rest.length){seen=[];rest=B.map((_,i)=>i);}
- const w=rest.map(i=>bk()==4?1/Math.pow(1+BSC[i],2):1);let r=Math.random()*w.reduce((a,b)=>a+b,0),k=0;
+ const adj=s=>{const g=s.replace(/\//g,''),W=bk()==6?4:bk(),b=c=>c==='X'||c==='O';let p=0;for(let i=0;i<g.length;i++){if(!b(g[i]))continue;if(i%W<W-1&&b(g[i+1]))p++;if(i+W<g.length&&b(g[i+W]))p++;}return p;};
+ const w=rest.map(i=>bk()==4?1/Math.pow(1+BSC[i],2):dyn()&&B[i].includes('/')?1/(1+5*adj(B[i])):1);let r=Math.random()*w.reduce((a,b)=>a+b,0),k=0;
  while(k<rest.length-1&&(r-=w[k])>0)k++;
  const i=rest[k];seen.push(i);store.set(key,seen);return i;
 }
