@@ -29,5 +29,9 @@ GitHub の Settings → Pages → Branch を `main` / `(root)` にして Save。
 数分後に `https://<ユーザー名>.github.io/15cross/` で遊べます。
 
 ## ライセンス
+コードは自由に決めてOKですが、`data/vocab.js` と `data/bank.js` は JMdict 由来のデータなので CC BY-SA 4.0 のままにしてください(`data/LICENSE.md` 参照)。
+アプリ内では「≡ → 出典」と「語彙」画面に出典を表示しています。
+EDRDGは辞書データの定期的な更新も条件にしているので、年に数回 `build_vocab.py` を再実行してください。
+
 語彙は JMdict (© EDRDG, CC BY-SA 4.0) 由来です。公開時は出典表記が必要です:
 "This product uses data from JMdict, © the Electronic Dictionary Research and Development Group."
