@@ -208,6 +208,8 @@ function nextIdx(){
 }
 function newGame(){clearInterval(tm);tm=null;found=new Set();$('bf').textContent='発見語 0';sol=toSol(N,BANK[bk()][nextIdx()]);size();startFrom();}
 $('bn').onclick=newGame;
+const CR='<div class="sub">この製品は JMdict/EDICT の辞書データを利用しています。これらのファイルは Electronic Dictionary Research and Development Group (EDRDG) の財産で、同グループのライセンス(CC BY-SA 4.0)に従って使用しています。<br><a href="https://www.edrdg.org/wiki/index.php/JMdict-EDICT_Dictionary_Project" target="_blank" rel="noopener">JMdict-EDICT Dictionary Project</a> / <a href="https://www.edrdg.org/edrdg/license.html" target="_blank" rel="noopener">ライセンス</a></div>';
+function credits(){open('出典',CR);}
 let dl=4;
 function dict(){
  const q=$('q')?$('q').value.trim():'';
@@ -219,6 +221,7 @@ function dict(){
 }
 function vocab(){
  open('語彙（黒=出題語 / 灰=解答のみ許容）','<div class="tabs">'+[2,3,4,5].map(k=>'<button id="d'+k+'">'+k+'文字 '+VAL[k].size+'</button>').join('')+'</div><input id="q" placeholder="検索"><div class="tags" id="dl"></div>');
+ $('bd').insertAdjacentHTML('beforeend',CR);
  [2,3,4,5].forEach(k=>$('d'+k).onclick=()=>{dl=k;dict();});$('q').oninput=dict;dict();
 }
 let fl=4;
@@ -236,10 +239,10 @@ $('bf').onclick=()=>{
 $('bm').onclick=()=>{
  const th=document.documentElement.getAttribute('data-theme');
  open('メニュー','<div class="sub">モード</div><div class="tabs">'+[3,4,6,5].map(k=>'<button data-m="'+k+'"'+(k==MODE?' class="on"':'')+'>'+(k==6?'4×4(✕)':k+'×'+k)+'</button>').join('')+'</div>'
-  +'<div class="sub">その他</div><div class="tabs"><button id="mv">語彙</button></div>'
+  +'<div class="sub">その他</div><div class="tabs"><button id="mv">語彙</button><button id="mc">出典</button></div>'
   +'<div class="sub">設定（表示）</div><div class="tabs"><button data-t="light"'+(th=='light'?' class="on"':'')+'>ライト</button><button data-t="dark"'+(th=='dark'?' class="on"':'')+'>ダーク</button></div>');
  document.querySelectorAll('#bd [data-m]').forEach(b=>b.onclick=()=>{const k=+b.dataset.m;close();if(k!==MODE){MODE=k;N=k==6?4:k;XM=k==6;store.set('katakana15.mode',MODE);grid=[];newGame();}});
- $('mv').onclick=vocab;
+ $('mv').onclick=vocab;$('mc').onclick=credits;
  document.querySelectorAll('#bd [data-t]').forEach(b=>b.onclick=()=>{setTheme(b.dataset.t);document.querySelectorAll('#bd [data-t]').forEach(x=>x.classList.toggle('on',x===b));});
 };
 addEventListener('resize',size);
